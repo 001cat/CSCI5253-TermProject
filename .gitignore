@@ -1,4 +1,5 @@
-audio-fingerprint-identifying-python/mp3
-webFrontend/tmp
+/audioID/mp3
+/audioID/db
+/webFrontend/tmp
 .DS_Store
 __pycache__

@@ -1,37 +1,14 @@
 import sys
 import numpy as np
-from libs.reader_file import FileReader
-from libs.config import get_config
-from libs.db_sqlite import SqliteDatabase
-import libs.fingerprint as fingerprint
+from audioID.libs.reader_file import FileReader
+from audioID.libs.config import get_config
+from audioID.libs.db_sqlite import SqliteDatabase
+import audioID.libs.fingerprint as fingerprint
 from termcolor import colored
 from itertools import zip_longest
 
-# filename = sys.argv[1]
-filename = 'mp3/伊格赛听,不靠谱组合 - 广寒谣.mp3'
-
-
-
 config = get_config()
 db = SqliteDatabase()
-
-chunksize = 2**12
-L = 5
-
-reader = FileReader(filename)
-audio = reader.parse_audio()
-
-data = []
-for c in audio['channels']:
-    iStart = np.random.randint((len(c)-L*audio['Fs']))
-    iEnd   = iStart + L*audio['Fs']
-    data.append(c[iStart:iEnd])
-# data = audio['channels']
-Fs = fingerprint.DEFAULT_FS
-channel_amount = len(data)
-
-result = set()
-matches = []
 
 def grouper(iterable, n, fillvalue=None):
     args = [iter(iterable)] * n
@@ -117,35 +94,62 @@ def align_matches(matches):
         "OFFSET_SECS" : nseconds
     }
 
-for channeln, channel in enumerate(data):
-    # TODO: Remove prints or change them into optional logging.
-    msg = '   fingerprinting channel %d/%d'
-    print(colored(msg, attrs=['dark']) % (channeln+1, channel_amount))
+def recognize_file(filepath):
+    # config = get_config()
+    # db = SqliteDatabase()
 
-    matches.extend(find_matches(channel))
+    chunksize = 2**12
+    L = 5
 
-    msg = '   finished channel %d/%d, got %d hashes'
-    print(colored(msg, attrs=['dark']) % (
-      channeln+1, channel_amount, len(matches)
-    ))
+    reader = FileReader(filepath)
+    audio = reader.parse_audio()
 
-total_matches_found = len(matches)
+    data = []
+    for c in audio['channels']:
+        iStart = np.random.randint((len(c)-L*audio['Fs']))
+        iEnd   = iStart + L*audio['Fs']
+        data.append(c[iStart:iEnd])
+    # data = audio['channels']
+    Fs = fingerprint.DEFAULT_FS
+    channel_amount = len(data)
 
-if total_matches_found > 0:
-    msg = ' ** totally found %d hash matches'
-    print(colored(msg, 'green') % total_matches_found)
+    result = set()
+    matches = []
 
-    song = align_matches(matches)
+    for channeln, channel in enumerate(data):
+        # TODO: Remove prints or change them into optional logging.
+        msg = '   fingerprinting channel %d/%d'
+        print(colored(msg, attrs=['dark']) % (channeln+1, channel_amount))
 
-    msg = ' => song: %s (id=%d)\n'
-    msg += '    offset: %d (%d secs)\n'
-    msg += '    confidence: %d'
+        matches.extend(find_matches(channel))
 
-    print(colored(msg, 'green') % (
-      song['SONG_NAME'], song['SONG_ID'],
-      song['OFFSET'], song['OFFSET_SECS'],
-      song['CONFIDENCE']
-    ))
-else:
-    msg = ' ** not matches found at all'
-    print(colored(msg, 'red'))
+        msg = '   finished channel %d/%d, got %d hashes'
+        print(colored(msg, attrs=['dark']) % (
+        channeln+1, channel_amount, len(matches)
+        ))
+
+    total_matches_found = len(matches)
+
+    if total_matches_found > 0:
+        msg = ' ** totally found %d hash matches'
+        print(colored(msg, 'green') % total_matches_found)
+
+        song = align_matches(matches)
+
+        msg = ' => song: %s (id=%d)\n'
+        msg += '    offset: %d (%d secs)\n'
+        msg += '    confidence: %d'
+
+        print(colored(msg, 'green') % (
+        song['SONG_NAME'], song['SONG_ID'],
+        song['OFFSET'], song['OFFSET_SECS'],
+        song['CONFIDENCE']
+        ))
+    else:
+        msg = ' ** not matches found at all'
+        print(colored(msg, 'red'))
+
+if __name__ == '__main__':
+    filepath = sys.argv[1]
+    # filepath = 'mp3/伊格赛听,不靠谱组合 - 广寒谣.mp3'
+    recognize_file(filepath)

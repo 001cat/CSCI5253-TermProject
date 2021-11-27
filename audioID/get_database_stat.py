@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from libs.db_sqlite import SqliteDatabase
+from audioID.libs.db_sqlite import SqliteDatabase
 from termcolor import colored
 
 # get summary information
@@ -21,6 +21,7 @@ def printSummary():
 
 # get songs \w details
 def printSongs():
+  db = SqliteDatabase()
   rows = db.executeAll("""
     SELECT
       s.id,
@@ -37,6 +38,12 @@ def printSongs():
       colored('%d hashes', 'green')             # hashes
     )
     print(msg % row)
+  
+  songs = {}
+  songs['id'] = [row[0] for row in rows]
+  songs['filename'] = [row[1] for row in rows]
+  songs['hashes'] = [row[2] for row in rows]
+  return songs
 
 # find duplicates
 def printDuplicates():

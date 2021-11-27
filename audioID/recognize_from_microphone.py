@@ -2,18 +2,18 @@
 import os
 from posixpath import split
 import sys
-import libs
-import libs.fingerprint as fingerprint
+import audioID.libs
+import audioID.libs.fingerprint as fingerprint
 import argparse
 
 from argparse import RawTextHelpFormatter
 from itertools import zip_longest
 from termcolor import colored
-from libs.config import get_config
-from libs.reader_microphone import MicrophoneReader
-from libs.visualiser_console import VisualiserConsole as visual_peak
-from libs.visualiser_plot import VisualiserPlot as visual_plot
-from libs.db_sqlite import SqliteDatabase
+from audioID.libs.config import get_config
+from audioID.libs.reader_microphone import MicrophoneReader
+from audioID.libs.visualiser_console import VisualiserConsole as visual_peak
+from audioID.libs.visualiser_plot import VisualiserPlot as visual_plot
+from audioID.libs.db_sqlite import SqliteDatabase
 # from libs.db_mongo import MongoDatabase
 
 if __name__ == '__main__':

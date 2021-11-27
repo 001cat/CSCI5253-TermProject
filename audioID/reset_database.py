@@ -1,5 +1,5 @@
 #!/usr/bin/python
-from libs.db_sqlite import SqliteDatabase
+from audioID.libs.db_sqlite import SqliteDatabase
 
 if __name__ == '__main__':
   db = SqliteDatabase()

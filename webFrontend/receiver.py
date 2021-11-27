@@ -1,5 +1,6 @@
 import os,sys
 import json,pika
+import audioID.entry
 
 def callback(ch, method, properties, body):
     try:
@@ -10,6 +11,8 @@ def callback(ch, method, properties, body):
     
     filepath = os.path.join(data['directory'],data['filename'])
     
+
+    print(audioID.entry.addAudio(filepath))
     
     ch.basic_ack(delivery_tag=method.delivery_tag)
     sys.stdout.flush()

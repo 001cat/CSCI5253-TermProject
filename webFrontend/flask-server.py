@@ -1,7 +1,7 @@
 import os
 from flask import Flask, flash, request, redirect, url_for
 from werkzeug.utils import secure_filename
-import pika
+import pika,json
 
 UPLOAD_FOLDER = '/Users/ayu/Study/Courses/CSCI5253/TermProject/webFrontend/tmp/'
 ALLOWED_EXTENSIONS = {'mp3'}
@@ -18,12 +18,12 @@ def hello_world():
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-def toRabbitMQ(body):
+def toRabbitMQ(data):
     rabbitMQ = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitMQHost))
     rabbitMQChannel = rabbitMQ.channel()
     rabbitMQChannel.queue_declare(queue='toWorker')
     # rabbitMQChannel.exchange_declare(exchange='logs', exchange_type='topic')
-    rabbitMQChannel.basic_publish(exchange='',routing_key='toWorker', body=body)
+    rabbitMQChannel.basic_publish(exchange='',routing_key='toWorker', body=json.dumps(data))
     rabbitMQ.close()
 
 @app.route('/', methods=['GET', 'POST'])
