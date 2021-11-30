@@ -29,6 +29,7 @@ kubectl apply -f logs/logs-deployment.yaml
 
 
 
+
 # kubectl port-forward --address 0.0.0.0 service/flask 5000:5000 &
 # kubectl port-forward --address 0.0.0.0 service/redis 6379:6379 &
 # kubectl port-forward --address 0.0.0.0 service/rabbitmq 5672:5672 &
