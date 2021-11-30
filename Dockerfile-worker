@@ -1,5 +1,0 @@
-FROM python:3.8-buster
-RUN  pip3 install numpy
-WORKDIR /srv
-COPY audio-fingerprint-identifying-python /srv/
-CMD [ "python3", "audio-fingerprint-identifying-python/worker-server.py"]

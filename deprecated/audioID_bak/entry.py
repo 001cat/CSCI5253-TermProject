@@ -1,8 +1,6 @@
 import os
 from audioID.get_database_stat import printSongs
 from audioID.collect_fingerprints_of_songs import addAudio2DB
-# get_database_stat = __import__('get-database-stat')
-# collect_fingerprints_of_songs = __import__('collect-fingerprints-of-songs')
 
 packageDir = os.path.dirname(os.path.realpath(__file__))
 

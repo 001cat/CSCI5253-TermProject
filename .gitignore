@@ -1,5 +1,13 @@
-/audioID/mp3
-/audioID/db
+/audioID_bak/mp3
+/audioID_bak/db
 /webFrontend/tmp
 .DS_Store
 __pycache__
+
+/db/
+/storage/
+/mp3
+
+fingerprints2.db
+*.wav
+*.mp3

@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package audioIDProto;
+
+message addNewSongRequest {
+    string name = 1;
+    bytes  audio = 2;
+}
+
+message addNewSongReply {
+    string reply = 1;
+}
+
+// message addRequest {
+//   int32 a = 1;
+//   int32 b = 2;
+// }
+
+// message addReply {
+//   int32 c = 1;
+// }
+
+// message rawimageRequest {
+//   bytes img = 1;
+// }
+
+// message imageReply {
+//   int32 width = 1;
+//   int32 height = 2;
+// }
+
+// message dotproductRequest {
+//   repeated double a = 1;
+//   repeated double b = 2;
+// }
+
+// message dotproductReply {
+//   double c = 1;
+// }
+
+// message jsonimageRequest {
+//   string img = 1;
+// }
+
+// Interface exported by the server.
+service AudioIDgrpc {
+    rpc addNewSong(addNewSongRequest) returns (addNewSongReply) {}
+}

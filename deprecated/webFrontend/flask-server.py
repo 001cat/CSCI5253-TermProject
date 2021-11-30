@@ -1,22 +1,22 @@
 import os
 from flask import Flask, flash, request, redirect, url_for
-from werkzeug.utils import secure_filename
+# from werkzeug.utils import secure_filename
 import pika,json
 
-UPLOAD_FOLDER = '/Users/ayu/Study/Courses/CSCI5253/TermProject/webFrontend/tmp/'
-ALLOWED_EXTENSIONS = {'mp3'}
-
 app = Flask(__name__)
-app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+app.config['STORAGE_TYPE'] = 'k8s' # k8s or local
+app.config['UPLOAD_FOLDER_K8S'] = '/srv/uploads/'
+app.config['UPLOAD_FOLDER_LOCAL'] = '/Users/ayu/Study/Courses/CSCI5253/TermProject/storage/'
 
 rabbitMQHost = os.getenv("RABBITMQ_HOST") or "localhost"
+# rabbitMQHost = "host.docker.internal"
 
 @app.route("/hello")
 def hello_world():
     return "<p>Hello, World!</p>"
 
 def allowed_file(filename):
-    return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return '.' in filename and filename.rsplit('.', 1)[1].lower() in {'mp3'}
 
 def toRabbitMQ(data):
     rabbitMQ = pika.BlockingConnection(pika.ConnectionParameters(host=rabbitMQHost))
@@ -26,8 +26,21 @@ def toRabbitMQ(data):
     rabbitMQChannel.basic_publish(exchange='',routing_key='toWorker', body=json.dumps(data))
     rabbitMQ.close()
 
+def saveSong(file):
+    if app.config['STORAGE_TYPE'] == 'local':
+        dirPath = app.config['UPLOAD_FOLDER_LOCAL']
+        file.save(os.path.join(dirPath, file.filename))
+        return os.path.join(dirPath, file.filename)
+    elif app.config['STORAGE_TYPE'] == 'k8s':
+        dirPath = app.config['UPLOAD_FOLDER_K8S']
+        # os.makedirs(dirPath,exist_ok=True)
+        file.save(os.path.join(dirPath, file.filename))
+        return os.path.join(dirPath, file.filename)
+    else:
+        raise ValueError('Wrong storage type!')
+
 @app.route('/', methods=['GET', 'POST'])
-def addNewSongs():
+def addNewSong():
     if request.method == 'POST':
         # check if the post request has the file part
         if 'file' not in request.files:
@@ -41,9 +54,8 @@ def addNewSongs():
             flash('No selected file')
             return redirect(request.url)
         if file and allowed_file(file.filename):
-            filename = file.filename #secure_filename(file.filename)
-            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            toRabbitMQ({'directory':app.config['UPLOAD_FOLDER'],'filename':filename})
+            body = {'storageType':app.config['STORAGE_TYPE'],'path':saveSong(file)}
+            toRabbitMQ(body)
             return redirect(request.url)
     return '''
     <!doctype html>
@@ -55,3 +67,4 @@ def addNewSongs():
     </form>
     '''
 
+app.run(host="0.0.0.0", port=5000)

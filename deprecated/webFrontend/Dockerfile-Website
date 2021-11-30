@@ -1,0 +1,6 @@
+FROM python:3.8-buster
+RUN  pip3 install pika flask
+WORKDIR /srv
+COPY flask-server.py /srv
+RUN  mkdir /srv/uploads
+CMD  [ "python3", "flask-server.py"]
