@@ -18,7 +18,7 @@ kubectl apply -f cassandra/cassandra-service.yaml
 
 kubectl apply -f logs/logs-deployment.yaml
 
-sleep 120
+sleep 60
 
 kubectl apply -f worker/worker-deployment.yaml
 

@@ -18,8 +18,8 @@ spec:
         # imagePullPolicy: Never
         resources:
           requests:
-            cpu: 100m
-            memory: 800Mi
+            cpu: 2
+            memory: 1000Mi
         env:
         - name: RABBITMQ_HOST
           value: rabbitmq
