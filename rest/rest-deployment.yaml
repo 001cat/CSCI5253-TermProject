@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: rest-server
-        image: audioid-rest
-        imagePullPolicy: Never
+        image: 001cat/audioid-rest:latest
+        # imagePullPolicy: Never
         resources:
           requests:
             cpu: 100m

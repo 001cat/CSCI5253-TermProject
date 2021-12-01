@@ -1,4 +1,4 @@
-gcloud config set compute/zone us-central-c
+gcloud config set compute/zone us-central1-c
 gcloud container clusters create audioid
 # kubectl get nodes
 
