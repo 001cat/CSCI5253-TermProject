@@ -15,10 +15,12 @@ def callback(ch, method, properties, body):
     print(data)
     
     if data['cmd'] == 'addNewSong':
+        toLogs(f"Request received, adding {data['path']}")
         msg = audioID.core.addAudio2DB(data['path'])
         toLogs(msg)
         os.system(f"""rm "{data['path']}" """)
     elif data['cmd'] == 'recogFile':
+        toLogs(f"Request received, recognizing {data['path']}")
         msg = audioID.core.recognize_file(data['path'])
         toLogs(msg)
         os.system(f"""rm "{data['path']}" """)
