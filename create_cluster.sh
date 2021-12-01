@@ -11,5 +11,9 @@ gcloud filestore instances create audioid \
   --file-share=name="audiofs",capacity=1TB \
   --network=name="default"
 
-FILESTORE_IP=`gcloud filestore instances describe audioid \
-    --zone us-central1-c --format="value(networks.ipAddresses[0])"`
+# FILESTORE_IP=`gcloud filestore instances describe audioid \
+#     --zone us-central1-c --format="value(networks.ipAddresses[0])"`
+
+# FILESTORE_IP=`gcloud filestore instances describe audioid-2 \
+#     --zone us-central1-c --format="value(networks.ipAddresses[0])"`
+

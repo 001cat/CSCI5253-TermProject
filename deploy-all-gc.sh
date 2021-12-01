@@ -1,10 +1,15 @@
 #!/bin/sh
-kubectl apply -f storage/pvc-gc.yaml
+FILESTORE_IP=`gcloud filestore instances describe audioid \
+    --zone us-central1-c --format="value(networks.ipAddresses[0])"`
+sed "s/FILESTORE_IP/${FILESTORE_IP}/g" storage/pvc-gc.yaml > pvc-gc.yaml
+kubectl apply -f pvc-gc.yaml
+
+kubectl apply -f rest/rest-deployment.yaml
+kubectl expose deployment rest-server --name=rest-service \
+        --type=LoadBalancer --port 80 --target-port 5000
 
 kubectl apply -f rabbitmq/rabbitmq-deployment.yaml
 kubectl apply -f rabbitmq/rabbitmq-service.yaml
-
-kubectl apply -f rest/rest-deployment.yaml
 
 kubectl apply -f cassandra/cassandra-deployment.yaml
 kubectl apply -f cassandra/cassandra-service.yaml
@@ -16,8 +21,7 @@ kubectl apply -f logs/logs-deployment.yaml
 sleep 120
 
 kubectl apply -f worker/worker-deployment.yaml
-kubectl expose deployment rest-server --name=rest-service \
-        --type=LoadBalancer --port 80 --target-port 5000
+
 
 
 

@@ -34,4 +34,3 @@ spec:
       - name: mp3uploads
         persistentVolumeClaim:
           claimName: mp3pvc
----
