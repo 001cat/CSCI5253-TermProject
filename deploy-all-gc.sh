@@ -16,8 +16,8 @@ kubectl apply -f logs/logs-deployment.yaml
 sleep 120
 
 kubectl apply -f worker/worker-deployment.yaml
-kubectl expose deployment rest --name=rest-service \
-        --type=LoadBalancer --port 80 --target-port 5000
+kubectl expose deployment rest-server --name=rest-service \
+        --type=LoadBalancer --port 8080 --target-port 5000
 
 
 

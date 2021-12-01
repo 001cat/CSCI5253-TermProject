@@ -11,7 +11,8 @@ spec:
   accessModes:
     - ReadWriteMany
   hostPath:
-    path: '/Users/ayu/Study/Courses/CSCI5253/TermProject/storage/tmp'
+    # path: '/Users/ayu/Study/Courses/CSCI5253/TermProject/storage/tmp'
+    path: '~/CSCI5253-TermProject/storage/tmp'
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
