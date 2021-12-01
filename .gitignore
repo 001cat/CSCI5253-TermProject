@@ -5,7 +5,6 @@
 __pycache__
 
 /db/
-/storage/tmp
 /mp3
 
 fingerprints2.db
