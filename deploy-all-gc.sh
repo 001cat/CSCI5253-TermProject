@@ -17,7 +17,7 @@ sleep 120
 
 kubectl apply -f worker/worker-deployment.yaml
 kubectl expose deployment rest-server --name=rest-service \
-        --type=LoadBalancer --port 8080 --target-port 5000
+        --type=LoadBalancer --port 80 --target-port 5000
 
 
 
