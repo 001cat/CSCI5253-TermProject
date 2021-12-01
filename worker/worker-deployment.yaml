@@ -6,7 +6,7 @@ spec:
   selector:
     matchLabels:
       app: worker-server
-  replicas: 1
+  replicas: 4
   template:
     metadata:
       labels:
@@ -19,7 +19,7 @@ spec:
         resources:
           requests:
             cpu: 100m
-            memory: 1000Mi
+            memory: 800Mi
         env:
         - name: RABBITMQ_HOST
           value: rabbitmq
