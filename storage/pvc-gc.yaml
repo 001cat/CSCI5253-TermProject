@@ -1,0 +1,10 @@
+kind: PersistentVolumeClaim
+apiVersion: v1
+metadata:
+    name: mp3pvc
+spec:
+    accessModes:
+      - ReadWriteMany
+    resources:
+        requests:
+            storage: 2Gi

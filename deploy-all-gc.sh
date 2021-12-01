@@ -1,5 +1,5 @@
 #!/bin/sh
-kubectl apply -f storage/pvc.yaml
+kubectl apply -f storage/pvc-gc.yaml
 
 kubectl apply -f rabbitmq/rabbitmq-deployment.yaml
 kubectl apply -f rabbitmq/rabbitmq-service.yaml

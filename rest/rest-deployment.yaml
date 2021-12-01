@@ -33,5 +33,5 @@ spec:
       volumes:
       - name: mp3uploads
         persistentVolumeClaim:
-          claimName: 'mp3-pvc'
+          claimName: mp3pvc
 ---
