@@ -89,7 +89,7 @@ def addAudio2DB(filepath):
     db.store_fingerprints(values)
   return f"Completed! New song {filename} added: id={song_id}, hash={audio['file_hash']}"
 
-def recognize_file(filepath,L=5): # randomly choose L sec segment 
+def recognize_file(filepath,L=None): # randomly choose L sec segment 
     def grouper(iterable, n, fillvalue=None):
         args = [iter(iterable)] * n
         return (filter(None, values) for values in zip_longest(fillvalue=fillvalue, *args))
@@ -175,6 +175,7 @@ def recognize_file(filepath,L=5): # randomly choose L sec segment
     #     iStart = np.random.randint((len(c)-L*audio['Fs']))
     #     iEnd   = iStart + L*audio['Fs']
     #     data.append(c[iStart:iEnd])
+    L = len(audio['channels'][0])//audio['Fs'] if L is None else L
     iStart = np.random.randint((len(audio['channels'][0])-L*audio['Fs']))
     iEnd   = iStart + L*audio['Fs']
     for c in audio['channels']:
