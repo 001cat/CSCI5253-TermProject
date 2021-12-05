@@ -113,7 +113,7 @@ class CassandraDatabase():
                 "filehash": filehash
             })
         else:
-            song_id = song[0]
+            song_id = song[0].id
         return song_id
 
     def store_fingerprints(self, values):
