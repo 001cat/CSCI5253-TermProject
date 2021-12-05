@@ -130,7 +130,7 @@ class CassandraDatabase():
     def get_song_hashes_count(self, song_id):
         query = 'SELECT count(*) FROM fingerprints WHERE song_fk = %s'
         rows = self.query(query,[song_id])
-        return int(rows[0])
+        return int(rows[0].count)
     def get_song_by_id(self, id):
         rows = self.find('songs', {"id": id},limit=1).all()
         try:
