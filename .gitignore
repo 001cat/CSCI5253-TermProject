@@ -1,12 +1,10 @@
-/audioID_bak/mp3
-/audioID_bak/db
-/webFrontend/tmp
-.DS_Store
-__pycache__
-
-/db/
-/mp3
+/deprecated
 
 fingerprints2.db
 *.wav
 *.mp3
+*.m4a
+*.ncm
+
+.DS_Store
+__pycache__
