@@ -117,6 +117,8 @@ class SqliteDatabase():
                 in zip_longest(fillvalue=fillvalue, *args))
 
         for split_values in grouper(values, 1000):
+            # print(list(split_values)) # debug Ayu
+            # raise ValueError('debug')
             query = "INSERT OR IGNORE INTO %s (%s) VALUES (?, ?, ?)" % (table, ", ".join(columns))
             self.cur.executemany(query, split_values)
 
@@ -159,13 +161,24 @@ class SqliteDatabase():
     def match_fingerprints(self,split_values):
         # @todo move to db related files
         query = """
-            SELECT upper(hash), song_fk, offset
+            SELECT hash, song_fk, offset
             FROM fingerprints
-            WHERE upper(hash) IN (%s)
+            WHERE hash IN (%s)
         """
+        # split_values = [s.upper() for s in split_values]
         query = query % ', '.join('?' * len(split_values))
-
         x = self.executeAll(query, split_values)
+
+
+        # query = """
+        #     SELECT hash, song_fk, offset
+        #     FROM fingerprints
+        #     """                                 #debug Ayu
+        # print(split_values)
+        # y = self.executeAll(query)
+        # print(y)
+
+
         return x
 
     # database summary

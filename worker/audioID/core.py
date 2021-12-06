@@ -7,14 +7,14 @@ from audioID.libs.db_cassandra import CassandraDatabase
 from audioID.libs.reader import FileReader
 from audioID.libs import fingerprint
 
-# config = {'db.type':'sqlite','db.path':'fingerprints2.db'}
+config = {'db.type':'sqlite','db.path':'fingerprints2.db'}
 # config = {'db.type':'sqlite','db.path':'/srv/db/fingerprints2.db'}
-config = {'db.type':'cassandra','db.path':['localhost']}
+# config = {'db.type':'cassandra','db.path':['localhost']}
 
 if os.getenv('CASSANDRA_HOST'):
   config = {'db.type':'cassandra','db.path':[os.getenv('CASSANDRA_HOST')]}
 
-print(config)
+# print(config)
 
 def initDB(config=config):
     if config["db.type"] == "sqlite":
@@ -123,7 +123,8 @@ def recognize_file(filepath,L=None): # randomly choose L sec segment
                 ))
 
             for hash, sid, offset in x:
-                # offset = int.from_bytes(offset,'little')
+                if config['db.type'] == 'sqlite':
+                  offset = int.from_bytes(offset,'little')
                 # (sid, db_offset - song_sampled_offset)
                 # print(sid, offset, mapper[hash], hashes) # debug Ayu
                 yield (sid, offset - mapper[hash])
@@ -159,7 +160,7 @@ def recognize_file(filepath,L=None): # randomly choose L sec segment
 
         return {
             "SONG_ID" : song_id,
-            "SONG_NAME" : songM.name,
+            "SONG_NAME" : songM.name if config['db.type'] == 'cassandra' else songM[1],
             "CONFIDENCE" : largest_count,
             "OFFSET" : int(largest),
             "OFFSET_SECS" : nseconds
@@ -207,7 +208,8 @@ def recognize_file(filepath,L=None): # randomly choose L sec segment
 
         song = align_matches(matches)
 
-        db.saveRecog(os.path.basename(filepath),song['SONG_NAME'],song['CONFIDENCE'])
+        if config['db.type'] == 'cassandra':
+          db.saveRecog(os.path.basename(filepath),song['SONG_NAME'],song['CONFIDENCE'])
 
         msg = ' => song: %s (id=%s)\n'
         msg += '    offset: %d (%d secs)\n'
@@ -229,11 +231,12 @@ def recognize_file(filepath,L=None): # randomly choose L sec segment
 
 if __name__ == '__main__':
   # reset_dataBase()
-  # for mp3file in glob.glob('/Users/ayu/Study/Courses/CSCI5253/TermProject/mp3/*.mp3'):
+  # for mp3file in glob.glob('/Users/ayu/Study/Courses/CSCI5253/TermProject/mp3/*.mp3')[:4]:
   #   addAudio2DB(mp3file)
-  recognize_file('/Users/ayu/Study/Courses/CSCI5253/TermProject/mp3/伊格赛听,不靠谱组合 - 广寒谣.mp3')
+  # recognize_file('/Users/ayu/Study/Courses/CSCI5253/TermProject/mp3/Eagles - Hotel California.mp3')
+  recognize_file('/Users/ayu/Study/Courses/CSCI5253/TermProject/mp3-recording/record-02.mp3')
 
-  printSongs()
+  # printSongs()
 
 
 

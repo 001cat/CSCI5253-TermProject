@@ -81,6 +81,8 @@ def fingerprint(channel_samples, Fs=DEFAULT_FS,
         window=mlab.window_hanning,
         noverlap=int(wsize * wratio))[0]
 
+    # arr2D *= 100 #debug Ayu
+
     # show spectrogram plot
     if plots:
       plt.plot(arr2D)
@@ -166,4 +168,5 @@ def generate_hashes(peaks, fan_value=DEFAULT_FAN_VALUE):
           # check if delta is between min & max
           if t_delta >= MIN_HASH_TIME_DELTA and t_delta <= MAX_HASH_TIME_DELTA:
             h = hashlib.sha1(("%s|%s|%s" % (str(freq1), str(freq2), str(t_delta))).encode())
+            # print(t1)  #debug Ayu
             yield (h.hexdigest()[0:FINGERPRINT_REDUCTION], t1)
